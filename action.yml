@@ -1,0 +1,81 @@
+name: 'Setup Atun'
+description: 'Install Atun CLI tool for accessing private VPC resources on AWS'
+
+author: 'AutomationD'
+
+inputs:
+  version:
+    description: 'Version of Atun to install'
+    required: true
+    default: 'latest'
+
+outputs:
+  atun-path:
+    description: 'Path to the installed Atun binary'
+    value: ${{ steps.install.outputs.atun-path }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Install Atun
+      id: install
+      shell: bash
+      run: |
+        # Get version from input or environment variable
+        VERSION="${{ inputs.version }}"
+        if [ "$VERSION" = "latest" ]; then
+          if [ -n "$ATUN_VERSION" ]; then
+            VERSION="$ATUN_VERSION"
+          else
+            # Fetch latest release from GitHub API
+            echo "Fetching latest stable release..."
+            VERSION=$(curl -s https://api.github.com/repos/automationd/atun/releases/latest | grep -Po '"tag_name": "\K.*?(?=")')
+            if [ -z "$VERSION" ]; then
+              echo "Failed to fetch latest version"
+              exit 1
+            fi
+            echo "Latest stable version: $VERSION"
+          fi
+        fi
+        
+        # Determine platform and architecture
+        OS=$(uname -s | tr '[:upper:]' '[:lower:]')
+        ARCH=$(uname -m)
+        if [ "$ARCH" = "x86_64" ]; then
+          ARCH="amd64"
+        elif [ "$ARCH" = "aarch64" ]; then
+          ARCH="arm64"
+        fi
+        
+        # Create temporary directory
+        TMP_DIR=$(mktemp -d)
+        cd "$TMP_DIR"
+        
+        # Download and extract
+        echo "Downloading Atun version $VERSION for $OS-$ARCH..."
+        curl -sSL "https://github.com/automationd/atun/releases/download/${VERSION}/atun_${VERSION}_${OS}_${ARCH}.tar.gz" -o atun.tar.gz
+        
+        # Extract
+        tar xzf atun.tar.gz
+        
+        # Create bin directory if it doesn't exist
+        mkdir -p "$HOME/.local/bin"
+        
+        # Move binary and set permissions
+        mv atun "$HOME/.local/bin/"
+        chmod +x "$HOME/.local/bin/atun"
+        
+        # Add to PATH if not already present
+        if [[ ":$PATH:" != *":$HOME/.local/bin:"* ]]; then
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+        fi
+        
+        # Cleanup
+        cd - > /dev/null
+        rm -rf "$TMP_DIR"
+        
+        # Verify installation
+        atun --version
+        
+        # Set output
+        echo "atun-path=$HOME/.local/bin/atun" >> "$GITHUB_OUTPUT"
