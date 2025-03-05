@@ -62,27 +62,13 @@ runs:
         # Extract
         tar xzf atun.tar.gz
         
-        # Create bin directory if it doesn't exist
-        mkdir -p "$HOME/.local/bin"
-        
         # Move binary and set permissions
-        mv atun "$HOME/.local/bin/"
-        chmod +x "$HOME/.local/bin/atun"
+        sudo mv atun /usr/local/bin/
+        sudo chmod +x /usr/local/bin/atun
         
-        # Add to PATH if not already present
-        if [[ ":$PATH:" != *":$HOME/.local/bin:"* ]]; then
-          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
-        fi
-        
-        # Set environment variables for the parent workflow
-        echo "ATUN_LOG_PLAIN_TEXT=true" >> "$GITHUB_ENV"
         
         # Cleanup
         cd - > /dev/null
-        rm -rf "$TMP_DIR"
+        rm -rf "$TMP_DIR"        
         
-        # Verify installation
         atun version
-        
-        # Set output
-        echo "atun-path=$HOME/.local/bin/atun" >> "$GITHUB_OUTPUT"
