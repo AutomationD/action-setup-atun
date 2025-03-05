@@ -82,7 +82,7 @@ runs:
         rm -rf "$TMP_DIR"
         
         # Verify installation
-        atun --version
+        atun version
         
         # Set output
         echo "atun-path=$HOME/.local/bin/atun" >> "$GITHUB_OUTPUT"

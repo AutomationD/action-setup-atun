@@ -22,10 +22,10 @@ steps:
   - name: Use Atun
     run: |
       # The binary is now available in PATH
-      atun --version
+11      atun version
       
       # Or use the output path
-      ${{ steps.install.outputs.atun-path }} --version
+      ${{ steps.install.outputs.atun-path }} version
 ```
 
 ### Specifying a Version
