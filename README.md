@@ -11,6 +11,7 @@ This GitHub Action installs the [Atun](https://github.com/automationd/atun) CLI 
 - Automatic latest stable version detection
 - Version selection via input or environment variable
 - Provides path to installed binary as output
+- Automatically sets recommended environment variables
 
 ## Usage
 
@@ -53,9 +54,21 @@ steps:
 
 ## Environment Variables
 
-| Name | Description |
-|------|-------------|
-| `ATUN_VERSION` | Version to use when version input is set to 'latest' |
+The action automatically sets the following environment variables for all subsequent steps:
+
+| Name | Description | Value |
+|------|-------------|-------|
+| `ATUN_LOG_PLAIN_TEXT` | Enables plain text logging | `true` |
+
+You can also override these values in your workflow if needed:
+
+```yaml
+steps:
+  - uses: actions/checkout@v4
+  - uses: automationd/action-setup-atun@v1
+    env:
+      ATUN_LOG_PLAIN_TEXT: false  # Override the default value
+```
 
 ## License
 
