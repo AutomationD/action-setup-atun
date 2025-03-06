@@ -33,7 +33,7 @@ runs:
           else
             # Fetch latest release from GitHub API
             echo "Fetching latest stable release..."
-            VERSION=$(curl -s https://api.github.com/repos/automationd/atun/releases/latest | grep -Po '"tag_name": "\K.*?(?=")')
+            VERSION=$(curl -s https://api.github.com/repos/automationd/atun/releases/latest | grep -Po '"tag_name": "\K.*?(?=")' | sed 's/^v//')
             if [ -z "$VERSION" ]; then
               echo "Failed to fetch latest version"
               exit 1
@@ -56,9 +56,10 @@ runs:
         cd "$TMP_DIR"
         
         # Download and extract
-        echo "Downloading Atun version $VERSION for $OS-$ARCH..."
-        curl -sSL "https://github.com/automationd/atun/releases/download/$v{VERSION}/atun-${OS}-${ARCH}.tar.gz" -o atun.tar.gz
-        
+        URL="https://github.com/automationd/atun/releases/download/v${VERSION}/atun-${OS}-${ARCH}.tar.gz"
+        echo "Downloading Atun version $VERSION for $OS-$ARCH from $URL..."
+        curl -sSL "$URL" -o atun.tar.gz
+      
         # Extract
         tar xzf atun.tar.gz
         
