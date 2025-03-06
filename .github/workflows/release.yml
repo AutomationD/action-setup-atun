@@ -1,0 +1,21 @@
+name: Move v1 Tag
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  move-tag:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Move v1 tag to the latest 1.x.x release
+      run: |
+        latest_release=$(git tag -l "1.*" --sort=-v:refname | head -n 1)
+        git tag -d v1 || true
+        git push origin :refs/tags/v1 || true
+        git tag v1 $latest_release
+        git push origin v1
