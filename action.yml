@@ -33,7 +33,7 @@ runs:
           else
             # Fetch latest release from GitHub API
             echo "Fetching latest stable release..."
-            VERSION=$(curl -s https://api.github.com/repos/automationd/atun/releases/latest | grep -Po '"tag_name": "\K.*?(?=")')
+            VERSION=$(curl -s https://api.github.com/repos/automationd/atun/releases/latest | grep -Po '"tag_name": "\K.*?(?=")' | sed 's/^v//')
             if [ -z "$VERSION" ]; then
               echo "Failed to fetch latest version"
               exit 1
