@@ -1,5 +1,8 @@
 name: Move v1 Tag
 
+permissions:
+  contents: write
+
 on:
   release:
     types: [published]
