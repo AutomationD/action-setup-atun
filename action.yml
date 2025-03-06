@@ -56,9 +56,10 @@ runs:
         cd "$TMP_DIR"
         
         # Download and extract
-        echo "Downloading Atun version $VERSION for $OS-$ARCH..."
-        curl -sSL "https://github.com/automationd/atun/releases/download/$v{VERSION}/atun-${OS}-${ARCH}.tar.gz" -o atun.tar.gz
-        
+        URL="https://github.com/automationd/atun/releases/download/$v{VERSION}/atun-${OS}-${ARCH}.tar.gz"
+        echo "Downloading Atun version $VERSION for $OS-$ARCH from $URL..."
+        curl -sSL "$URL" -o atun.tar.gz
+      
         # Extract
         tar xzf atun.tar.gz
         
