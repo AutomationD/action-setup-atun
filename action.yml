@@ -24,9 +24,11 @@ runs:
     - name: Install Atun
       id: install
       shell: bash
+      env:
+        INPUTS_VERSION: ${{ inputs.version }}
       run: |
         # Get version from input or environment variable
-        VERSION="${{ inputs.version }}"
+        VERSION="${INPUTS_VERSION#v}"
         if [ "$VERSION" = "latest" ]; then
           if [ -n "$ATUN_VERSION" ]; then
             VERSION="$ATUN_VERSION"
