@@ -57,7 +57,7 @@ runs:
         
         # Download and extract
         echo "Downloading Atun version $VERSION for $OS-$ARCH..."
-        curl -sSL "https://github.com/automationd/atun/releases/download/${VERSION}/atun_${VERSION}_${OS}_${ARCH}.tar.gz" -o atun.tar.gz
+        curl -sSL "https://github.com/automationd/atun/releases/download/$v{VERSION}/atun-${OS}-${ARCH}.tar.gz" -o atun.tar.gz
         
         # Extract
         tar xzf atun.tar.gz
